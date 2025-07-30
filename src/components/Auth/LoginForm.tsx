@@ -46,7 +46,7 @@ const LoginForm = () => {
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
       <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
 
-      <form className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Email
