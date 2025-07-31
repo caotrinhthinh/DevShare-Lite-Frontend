@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import type { Post } from "../types/Post";
+import { postsService } from "../services/posts.service";
+import PostCard from "../components/Posts/PostCard";
 
 const HomePage = () => {
-  //   const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -13,8 +16,9 @@ const HomePage = () => {
 
   const fetchPosts = async () => {
     try {
-      //   const response = await postsService.getPosts(1, 10);
-      //   setPosts(response.posts);
+      const response = await postsService.getPosts(1, 10);
+      setPosts(response.posts);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("Failed to load posts");
     } finally {
@@ -31,8 +35,9 @@ const HomePage = () => {
 
     try {
       setLoading(true);
-      //   const response = await postsService.searchPosts(searchQuery);
-      //   setPosts(response.posts);
+      const response = await postsService.searchPosts(searchQuery);
+      setPosts(response.posts);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("Search failed");
     } finally {

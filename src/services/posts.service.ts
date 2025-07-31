@@ -3,8 +3,13 @@ import { api } from "./api";
 
 export const postsService = {
   getPosts: async (page: number = 1, limit: number = 10) => {
-    const response = await api.get(`/posts?page=${page}&limit=${limit}`);
-    return response.data;
+    try {
+      const response = await api.get(`/posts?page=${page}&limit=${limit}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      throw error;
+    }
   },
 
   getPost: async (id: string): Promise<Post> => {
