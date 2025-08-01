@@ -1,24 +1,5 @@
+import type { AuthResponse, LoginData, RegisterData } from "../types";
 import { api } from "./api";
-
-export interface RegisterData {
-  email: string;
-  password: string;
-  name: string;
-}
-
-export interface LoginData {
-  email: string;
-  password: string;
-}
-
-export interface AuthResponse {
-  accessToken: string;
-  user: {
-    id: string;
-    email: string;
-    name: string;
-  };
-}
 
 export const authService = {
   register: async (data: RegisterData) => {

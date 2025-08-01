@@ -62,47 +62,56 @@ const HomePage = () => {
   return (
     <div className="space-y-8">
       {/* Hero Section */}
-      <div className="bg-white rounded-lg shadow-sm border p-8 text-center">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Welcome to DevShare Lite
+      <section className="bg-white rounded-lg shadow-md border p-10 text-center">
+        <h1 className="text-5xl font-extrabold text-gray-900 mb-4">
+          🚀 Welcome to <span className="text-primary-600">DevShare Lite</span>
         </h1>
-        <p className="text-xl text-gray-600 mb-6">
-          A community forum for developers to share knowledge and discuss
-          technical topics
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
+          DevShare Lite is a collaborative forum where developers from all
+          levels come together to share knowledge, ask questions, and grow their
+          careers.
         </p>
 
         {!user ? (
-          <Link to="/register" className="btn btn-primary text-lg px-8 py-3">
+          <Link
+            to="/register"
+            className="inline-block bg-primary-600 hover:bg-primary-700 text-white font-semibold text-lg px-8 py-3 rounded-lg transition"
+          >
             Join the Community
           </Link>
         ) : (
-          <div className="flex justify-center items-center flex-col gap-3">
+          <div className="flex flex-col items-center gap-2 mt-4">
             <p className="text-lg text-gray-800">
               👋 Welcome back,{" "}
               <span className="font-semibold">{user.name}</span>!
             </p>
-            <Link to="/posts/create" className="btn btn-outline text-lg">
-              + Create New Post
-            </Link>
+            <p className="text-sm text-gray-500">
+              Ready to explore or contribute some knowledge today?
+            </p>
           </div>
         )}
-      </div>
-
+      </section>
       {/* Search Section */}
-      <div className="bg-white rounded-lg shadow-sm border p-6">
-        <form onSubmit={handleSearch} className="flex gap-4">
+      <section className="bg-white rounded-lg shadow-md border p-8">
+        <form
+          onSubmit={handleSearch}
+          className="flex flex-col md:flex-row gap-4 items-center"
+        >
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search posts..."
-            className="input flex-1"
+            placeholder="🔍 Search posts, tags, or authors..."
+            className="input w-full md:flex-1 px-4 py-3 rounded-lg border focus:ring-2 focus:ring-primary-500 focus:outline-none"
           />
-          <button type="submit" className="btn btn-primary">
+          <button
+            type="submit"
+            className="bg-primary-600 hover:bg-primary-700 text-white font-medium px-6 py-3 rounded-lg transition"
+          >
             Search
           </button>
         </form>
-      </div>
+      </section>
 
       {/* Posts */}
       <div className="space-y-6">

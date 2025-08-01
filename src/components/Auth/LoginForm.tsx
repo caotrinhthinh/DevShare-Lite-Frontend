@@ -35,7 +35,7 @@ const LoginForm = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
-      await login(data.email, data.password);
+      await login(data);
       navigate("/");
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Login failed");
@@ -53,6 +53,9 @@ const LoginForm = () => {
           </label>
           <input
             type="email"
+            {...register("email")}
+            autoComplete="email"
+            required
             className={`input w-full ${errors.email ? "border-red-500" : ""}`}
             placeholder="Enter your email"
           />
@@ -82,7 +85,6 @@ const LoginForm = () => {
 
         <button
           type="submit"
-          onClick={handleSubmit(onSubmit)}
           className="btn btn-primary w-full"
           disabled={isSubmitting}
         >

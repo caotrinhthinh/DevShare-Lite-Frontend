@@ -1,6 +1,9 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { AuthContext } from "./AuthContext";
 import type { User } from "../types/User";
+import { authService } from "../services/auth.service";
+import type { LoginData, RegisterData } from "../types";
+import { api } from "../services/api";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -31,18 +34,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     initAuth();
   }, [token]);
 
-  const login = async (email: string, password: string) => {
-    // const response = await authService.login(email, password);
-    localStorage.setItem("token", "mocked_token"); // Mocked token for demonstration
-    setToken("mocked_token");
-    setUser(null); // Mocked user data, replace with actual user data from response
+  const login = async (data: LoginData) => {
+    const response = await authService.login(data);
+    localStorage.setItem("token", response.accessToken);
+    setToken(response.accessToken);
+    setUser(response.user);
   };
 
-  const register = async (email: string, password: string, name: string) => {
-    // const response = await api.register(email, password, name);
-    // setToken(response.token);
-    // setUser(response.user);
-    // localStorage.setItem("token", response.token);
+  const register = async (data: RegisterData) => {
+    const response = await authService.register(data);
+    setToken(response.token);
+    setUser(response.user);
+    localStorage.setItem("token", response.token);
   };
 
   const logout = () => {

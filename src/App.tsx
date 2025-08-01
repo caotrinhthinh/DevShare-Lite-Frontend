@@ -3,6 +3,7 @@ import { AuthProvider } from "./context/AuthProvider";
 import Layout from "./components/Layout/Layout";
 import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
@@ -11,6 +12,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
+
           {/* <Route path="/posts" element={<PostsPage />} />
             <Route path="/posts/:id" element={<PostDetailPage />} />
             <Route path="/login" element={<LoginPage />} />
