@@ -2,8 +2,9 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import * as yup from "yup";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { authService } from "../../services/auth.service";
 
 const schema = yup.object({
@@ -26,13 +27,16 @@ type FormData = yup.InferType<typeof schema>;
 
 const RegisterForm = () => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
+    mode: "all", // Validate ngay khi nhập
   });
 
   const onSubmit = async (data: FormData) => {
@@ -42,27 +46,49 @@ const RegisterForm = () => {
         email: data.email,
         password: data.password,
       });
-      toast.success("Registration successful!");
       navigate("/login");
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Registration failed");
+      const message = error.response?.data?.message || "Registration failed";
+      if (message.toLowerCase().includes("email")) {
+        setError("email", {
+          type: "server",
+          message,
+        });
+      } else {
+        setError("name", {
+          type: "server",
+          message,
+        });
+      }
     }
   };
 
   const renderField = (
     name: keyof FormData,
     label: string,
-    type: "text" | "email" | "password"
+    type: "text" | "email" | "password",
+    toggleVisibility?: () => void,
+    visible?: boolean
   ) => (
-    <div>
+    <div className="relative">
       <label className="block text-sm font-medium text-gray-700 mb-1">
         {label}
       </label>
       <input
-        type={type}
+        type={type === "password" ? (visible ? "text" : "password") : type}
         {...register(name)}
-        className={`input w-full ${errors[name] ? "border-red-500" : ""}`}
+        className={`input w-full border rounded px-3 py-2 pr-10 ${
+          errors[name] ? "border-red-500" : "border-gray-300"
+        }`}
       />
+      {type === "password" && toggleVisibility && (
+        <span
+          className="absolute top-[38px] right-3 text-gray-500 cursor-pointer"
+          onClick={toggleVisibility}
+        >
+          {visible ? <EyeOff size={18} /> : <Eye size={18} />}
+        </span>
+      )}
       {errors[name] && (
         <p className="text-red-500 text-sm mt-1">{errors[name]?.message}</p>
       )}
@@ -76,12 +102,18 @@ const RegisterForm = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {renderField("name", "Name", "text")}
         {renderField("email", "Email", "email")}
-        {renderField("password", "Password", "password")}
+        {renderField(
+          "password",
+          "Password",
+          "password",
+          () => setShowPassword((prev) => !prev),
+          showPassword
+        )}
         {renderField("confirmPassword", "Confirm Password", "password")}
 
         <button
           type="submit"
-          className="btn btn-primary w-full"
+          className="btn btn-primary w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
           disabled={isSubmitting}
         >
           {isSubmitting ? "Registering..." : "Register"}
@@ -91,7 +123,7 @@ const RegisterForm = () => {
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
           Already have an account?{" "}
-          <Link to="/login" className="text-primary-600 hover:text-primary-500">
+          <Link to="/login" className="text-blue-600 hover:underline">
             Login here
           </Link>
         </p>

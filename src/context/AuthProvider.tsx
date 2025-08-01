@@ -3,7 +3,6 @@ import { AuthContext } from "./AuthContext";
 import type { User } from "../types/User";
 import { authService } from "../services/auth.service";
 import type { LoginData, RegisterData } from "../types";
-import { api } from "../services/api";
 
 interface AuthProviderProps {
   children: ReactNode;
