@@ -8,10 +8,7 @@ export const authService = {
   },
 
   login: async (data: LoginData): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>("/auth/login", data);
-    if (response.data.accessToken) {
-      localStorage.setItem("token", response.data.accessToken);
-    }
+    const response = await api.post("/auth/login", data);
     return response.data;
   },
 

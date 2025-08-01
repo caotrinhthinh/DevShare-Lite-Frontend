@@ -46,7 +46,7 @@ const RegisterForm = () => {
         email: data.email,
         password: data.password,
       });
-      navigate("/login");
+      navigate("/");
     } catch (error: any) {
       const message = error.response?.data?.message || "Registration failed";
       if (message.toLowerCase().includes("email")) {

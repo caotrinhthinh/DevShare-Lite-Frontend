@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const initAuth = async () => {
       if (token) {
         try {
-          const userData = null;
+          const userData = await authService.getProfile();
           setUser(userData);
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
@@ -34,10 +34,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [token]);
 
   const login = async (data: LoginData) => {
-    const response = await authService.login(data);
-    localStorage.setItem("token", response.accessToken);
-    setToken(response.accessToken);
-    setUser(response.user);
+    try {
+      const response = await authService.login(data);
+      localStorage.setItem("token", response.accessToken);
+      setToken(response.accessToken);
+      setUser(response.user);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Login error:", error);
+      if (error.response && error.response.data) {
+        throw {
+          code: error.response.data.code || "LOGIN_FAILED",
+          message: error.response.data.message || "Login failed",
+        };
+      }
+      throw error;
+    }
   };
 
   const register = async (data: RegisterData) => {

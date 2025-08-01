@@ -73,14 +73,23 @@ const HomePage = () => {
         </p>
 
         {!user ? (
-          <Link
-            to="/register"
-            className="inline-block bg-primary-600 hover:bg-primary-700 text-white font-semibold text-lg px-8 py-3 rounded-lg transition"
-          >
-            Join the Community
-          </Link>
+          <div className="flex flex-col items-center gap-3 mt-6">
+            <Link
+              to="/register"
+              className="bg-primary-600 hover:bg-primary-700 text-white font-semibold text-lg px-8 py-3 rounded-lg transition shadow"
+            >
+              🚀 Join the Community
+            </Link>
+
+            <Link
+              to="/create-post"
+              className="text-primary-600 hover:text-primary-700 font-medium text-base *: px-6 py-3 rounded-lg transition"
+            >
+              ✍️ Create a post
+            </Link>
+          </div>
         ) : (
-          <div className="flex flex-col items-center gap-2 mt-4">
+          <div className="flex flex-col items-center gap-2 mt-6">
             <p className="text-lg text-gray-800">
               👋 Welcome back,{" "}
               <span className="font-semibold">{user.name}</span>!
@@ -91,6 +100,7 @@ const HomePage = () => {
           </div>
         )}
       </section>
+
       {/* Search Section */}
       <section className="bg-white rounded-lg shadow-md border p-8">
         <form
