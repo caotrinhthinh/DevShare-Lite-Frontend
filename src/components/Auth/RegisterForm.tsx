@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as yup from "yup";
+import { authService } from "../../services/auth.service";
 
 const schema = yup.object({
   name: yup.string().required("Name is required"),
@@ -36,7 +37,11 @@ const RegisterForm = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
-      // Gửi dữ liệu đăng ký ở đây nếu có API
+      await authService.register({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
       toast.success("Registration successful!");
       navigate("/login");
     } catch (error: any) {

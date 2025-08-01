@@ -1,24 +1,31 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import type { Post } from "../types/Post";
 import { postsService } from "../services/posts.service";
 import PostCard from "../components/Posts/PostCard";
+import { useAuth } from "../context/useAuth";
 
 const HomePage = () => {
+  const { user } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (page = 1) => {
     try {
-      const response = await postsService.getPosts(1, 10);
+      setLoading(true);
+      const response = await postsService.getPosts(page, 5);
       setPosts(response.posts);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      setTotalPages(Math.ceil(response.total / 5));
+      setCurrentPage(page);
     } catch (error) {
       toast.error("Failed to load posts");
     } finally {
@@ -37,7 +44,6 @@ const HomePage = () => {
       setLoading(true);
       const response = await postsService.searchPosts(searchQuery);
       setPosts(response.posts);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("Search failed");
     } finally {
@@ -64,12 +70,25 @@ const HomePage = () => {
           A community forum for developers to share knowledge and discuss
           technical topics
         </p>
-        <Link to="/register" className="btn btn-primary text-lg px-8 py-3">
-          Join the Community
-        </Link>
+
+        {!user ? (
+          <Link to="/register" className="btn btn-primary text-lg px-8 py-3">
+            Join the Community
+          </Link>
+        ) : (
+          <div className="flex justify-center items-center flex-col gap-3">
+            <p className="text-lg text-gray-800">
+              👋 Welcome back,{" "}
+              <span className="font-semibold">{user.name}</span>!
+            </p>
+            <Link to="/posts/create" className="btn btn-outline text-lg">
+              + Create New Post
+            </Link>
+          </div>
+        )}
       </div>
 
-      {/* Search */}
+      {/* Search Section */}
       <div className="bg-white rounded-lg shadow-sm border p-6">
         <form onSubmit={handleSearch} className="flex gap-4">
           <input
@@ -105,12 +124,43 @@ const HomePage = () => {
             <p className="text-gray-500 text-lg">No posts found</p>
             {searchQuery && (
               <button
-                onClick={fetchPosts}
+                onClick={() => fetchPosts(currentPage)}
                 className="mt-4 text-primary-600 hover:text-primary-500"
               >
                 Show all posts
               </button>
             )}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center space-x-4 py-6">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => fetchPosts(currentPage - 1)}
+              className={`btn btn-outline px-3 py-1 rounded ${
+                currentPage === 1
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-blue-500 text-white hover:bg-blue-600"
+              }`}
+            >
+              Previous
+            </button>
+            <span className="text-gray-700 font-medium">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => fetchPosts(currentPage + 1)}
+              className={`btn btn-outline px-3 py-1 rounded ${
+                currentPage === totalPages
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-blue-500 text-white hover:bg-blue-600"
+              }`}
+            >
+              Next
+            </button>
           </div>
         )}
       </div>
