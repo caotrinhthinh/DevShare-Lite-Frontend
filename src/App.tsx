@@ -1,3 +1,4 @@
+import React, { type ReactNode } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import HomePage from "./pages/HomePage";
@@ -5,8 +6,7 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import { useAuth } from "./context/useAuth";
 import CreatePostPage from "./pages/CreatePostPage";
-
-import React, { type ReactNode } from "react";
+import PostsPage from "./pages/PostsPage";
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const { user, isLoading } = useAuth();
@@ -35,8 +35,11 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/posts" element={<PostsPage />} />
 
-        {/* <Route path="/posts" element={<PostsPage />} */}
+        {/*  />
+
+
         {/* <Route path="/posts" element={<PostsPage />} />
             <Route path="/posts/:id" element={<PostDetailPage />} />
             <Route path="/login" element={<LoginPage />} />
