@@ -1,33 +1,12 @@
-import React, { type ReactNode } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
-import { useAuth } from "./context/useAuth";
 import CreatePostPage from "./pages/CreatePostPage";
 import PostsPage from "./pages/PostsPage";
 import PostDetailPage from "./pages/PostDetailPage";
-
-const ProtectedRoute = ({ children }: { children: ReactNode }) => {
-  const { user, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
-      </div>
-    );
-  }
-
-  return user ? (
-    <>{children}</>
-  ) : (
-    <Navigate
-      to={`/login?redirectTo=${encodeURIComponent(location.pathname)}`}
-    />
-  );
-};
+import ProtectedRoute from "./components/Auth/ProtectedRoute";
 
 function App() {
   return (
