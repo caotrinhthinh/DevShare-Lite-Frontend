@@ -67,9 +67,23 @@ const CommentSection = ({
     }
   };
 
+  const getTotalCommentCount = (comments: Comment[]) => {
+    let count = 0;
+    const countRecursive = (commentList: Comment[]) => {
+      for (const comment of commentList) {
+        count++;
+        if (comment.replies?.length) {
+          countRecursive(comment.replies);
+        }
+      }
+    };
+    countRecursive(comments);
+    return count;
+  };
+
   return (
     <div>
-      <h3>Comments ({comments.length})</h3>
+      <h3>Comments ({getTotalCommentCount(comments)})</h3>
 
       {/** Add Comment Form */}
       {user ? (
