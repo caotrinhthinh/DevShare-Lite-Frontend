@@ -4,6 +4,8 @@ import { api } from "./api";
 export const commentsService = {
   getComments: async (postId: string): Promise<Comment[]> => {
     const response = await api.get(`/posts/${postId}/comments`);
+    console.log(response);
+
     return response.data;
   },
 

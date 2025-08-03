@@ -34,6 +34,7 @@ const PostDetailPage = () => {
     if (!id) return;
     try {
       const commentsData = await commentsService.getComments(id);
+      console.log(commentsData);
       setComments(commentsData);
     } catch (error) {
       console.error("Failed to load comments: ", error);
@@ -66,6 +67,7 @@ const PostDetailPage = () => {
   useEffect(() => {
     if (id) {
       fetchPost();
+      fetchComments();
     }
   }, [id]);
 
@@ -80,7 +82,6 @@ const PostDetailPage = () => {
   if (!post) return null;
 
   const isAuthor = user && user.id === post.author._id;
-  console.log(isAuthor);
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">

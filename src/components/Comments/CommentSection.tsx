@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import type { Comment, CreateCommentData } from "../../types";
+import type { Comment } from "../../types";
 import { useAuth } from "../../context/useAuth";
 import { toast } from "react-toastify";
 import { commentsService } from "../../services/comments.service";
+import CommentForm from "./CommentForm";
+import CommentItem from "./CommentItem";
 
 interface CommentSectionProps {
   postId: string;
@@ -22,7 +24,7 @@ const CommentSection = ({
   const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleAddComment = async (data: CreateCommentData) => {
+  const handleAddComment = async (content: string, parentComment?: string) => {
     if (!user) {
       toast.error("Please login to comment");
       return;
@@ -30,7 +32,7 @@ const CommentSection = ({
 
     try {
       setIsSubmitting(true);
-      await commentsService.createComment(postId, data);
+      await commentsService.createComment(postId, { content, parentComment });
       toast.success("Comment added successfully");
       onCommentAdded();
     } catch (error) {
@@ -70,7 +72,41 @@ const CommentSection = ({
       <h3>Comments ({comments.length})</h3>
 
       {/** Add Comment Form */}
-      {user ? <div></div> : <div></div>}
+      {user ? (
+        <div>
+          <CommentForm
+            onSubmit={(content) => handleAddComment(content)}
+            isSubmitting={isSubmitting}
+            placeholder="Write a comment..."
+          />
+        </div>
+      ) : (
+        <div className="mb-8 text-center py-4 bg-gray-50 rounded-lg">
+          <p className="text-gray-600">Please login to add comments</p>
+        </div>
+      )}
+
+      {/** Comments List */}
+      <div>
+        {comments.map((comment) => (
+          <CommentItem
+            key={comment._id}
+            comment={comment}
+            currentUser={user}
+            onReply={(content) => handleAddComment(content, comment._id)}
+            onUpdate={(content) => handleUpdateComment(comment._id, content)}
+            onDelete={() => handleDeleteComment(comment._id)}
+          />
+        ))}
+
+        {comments.length === 0 && (
+          <div className="text-center py-8">
+            <p className="text-gray-500">
+              No comments yet. Be the first to comment!
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
