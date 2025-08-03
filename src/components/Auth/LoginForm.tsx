@@ -17,7 +17,7 @@ const schema = yup.object({
 
 type FormData = yup.InferType<typeof schema>;
 
-const LoginForm: React.FC = () => {
+const LoginForm = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const {

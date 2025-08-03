@@ -7,6 +7,7 @@ import CreatePostPage from "./pages/CreatePostPage";
 import PostsPage from "./pages/PostsPage";
 import PostDetailPage from "./pages/PostDetailPage";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/posts" element={<PostsPage />} />
         <Route path="/posts/:id" element={<PostDetailPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         {/*  />
 
