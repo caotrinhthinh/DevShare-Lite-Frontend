@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
 import ForgotPasswordForm from "../components/Auth/ForgotPasswordForm";
 import { toast } from "react-toastify";
@@ -9,21 +10,24 @@ const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
+  const [codeError, setCodeError] = useState("");
   const navigate = useNavigate();
 
   const handleVerify = async () => {
-    if (!code.trim()) {
-      toast.error("Please enter the code.");
+    if (!code) {
+      setCodeError("Please enter the code.");
       return;
     }
+
     try {
       setIsVerifying(true);
-      await authService.verifyResetCode(email, code.trim());
+      setCodeError("");
+      await authService.verifyResetCode(email, code);
       toast.success("Code verified!");
       navigate(`/reset-password?code=${code}`);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      toast.error("Invalid or expired code.");
+      setCodeError("Invalid or expired code.");
+      setCode("");
     } finally {
       setIsVerifying(false);
     }
@@ -55,21 +59,34 @@ const ForgotPasswordPage = () => {
             <p className="mt-2 text-gray-600">
               Please enter the reset code we just sent to your email.
             </p>
-            <div className="mt-6 flex items-center gap-3">
-              <input
-                type="text"
-                className="input flex-1"
-                placeholder="Enter the code."
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-              />
-              <button
-                className="btn btn-primary text-center"
-                onClick={handleVerify}
-                disabled={isVerifying}
-              >
-                {isVerifying ? "Verifying..." : "Verify Code"}
-              </button>
+
+            <div className="mt-6">
+              <div className="flex items-center gap-3">
+                <input
+                  type="text"
+                  className={`input flex-1 ${
+                    codeError ? "border-red-500" : ""
+                  }`}
+                  placeholder="Enter the code."
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === " ") e.preventDefault();
+                  }}
+                />
+                <button
+                  className="btn btn-primary"
+                  onClick={handleVerify}
+                  disabled={isVerifying}
+                >
+                  {isVerifying ? "Verifying..." : "Verify Code"}
+                </button>
+              </div>
+              {codeError && (
+                <p className="text-sm text-red-600 mt-2 text-left">
+                  {codeError}
+                </p>
+              )}
             </div>
           </div>
         </div>
