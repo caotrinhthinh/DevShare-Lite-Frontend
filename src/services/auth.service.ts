@@ -13,7 +13,7 @@ export const authService = {
   },
 
   verifyEmail: async (token: string) => {
-    const response = await api.get(`/auth/verify-email?token=${token}`);
+    const response = await api.get(`/auth/verify-email?code=${token}`);
     return response.data;
   },
 
@@ -22,8 +22,9 @@ export const authService = {
     return response.data;
   },
 
-  verifyResetCode: async (code: string) => {
+  verifyResetCode: async (email: string, code: string) => {
     const response = await api.post("/auth/verify-reset-code", {
+      email,
       code,
     });
     return response.data;
