@@ -22,9 +22,13 @@ const ForgotPasswordPage = () => {
     try {
       setIsVerifying(true);
       setCodeError("");
-      await authService.verifyResetCode(email, code);
+      const response = await authService.verifyResetCode(email, code);
+      const token = response.token;
+
+      sessionStorage.setItem("reset_token", token);
+
       toast.success("Code verified!");
-      navigate(`/reset-password?code=${code}`);
+      navigate(`/reset-password`);
     } catch (error) {
       setCodeError("Invalid or expired code.");
       setCode("");
