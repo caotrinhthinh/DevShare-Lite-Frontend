@@ -8,7 +8,7 @@ import PostDetailPage from "./pages/PostDetailPage";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
-import { HomePage } from "./pages/HomePage";
+import HomePage from "./pages/HomePage";
 
 function App() {
   return (
