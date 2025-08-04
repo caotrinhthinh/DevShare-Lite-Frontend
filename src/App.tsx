@@ -12,26 +12,15 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 function App() {
   return (
-    <Layout>
-      <Routes>
+    <Routes>
+      {/* Layout-wrapped routes */}
+      <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/posts" element={<PostsPage />} />
         <Route path="/posts/:id" element={<PostDetailPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
-
-        {/*  />
-
-
-        {/* <Route path="/posts" element={<PostsPage />} />
-            <Route path="/posts/:id" element={<PostDetailPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/verify-email" element={<EmailVerificationPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} /> */}
 
         {/* Protected Routes */}
         <Route
@@ -42,27 +31,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* <Route
-          path="/posts/:id/edit"
-          element={
-            <ProtectedRoute>
-              <EditPostPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          }
-        /> */}
+      </Route>
 
-        {/* 404 Route */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Layout>
+      {/* Route outside Layout */}
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+      {/* 404 Redirect */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
