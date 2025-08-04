@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import HomePage from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -28,6 +29,21 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* <Route path="/posts/:id/edit" element={
+                    <ProtectedRoute>
+                      <EditPostPage />
+                    </ProtectedRoute>
+                  } /> */}
       </Route>
 
       {/* Route outside Layout */}

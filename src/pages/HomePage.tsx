@@ -72,7 +72,7 @@ const HomePage = () => {
 
             {user ? (
               <Link
-                to="/posts/create"
+                to="/create-post"
                 className="inline-flex items-center px-8 py-4 bg-white text-primary-700 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
               >
                 <svg
@@ -88,7 +88,7 @@ const HomePage = () => {
                     d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
                   />
                 </svg>
-                Write Your First Post
+                Write Your Post
               </Link>
             ) : (
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

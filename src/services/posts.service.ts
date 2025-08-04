@@ -43,7 +43,7 @@ export const postsService = {
   },
 
   getMyPosts: async () => {
-    const response = await api.get("/posts/user/my-posts");
+    const response = await api.get("/users/me/posts");
     return response.data;
   },
 };
