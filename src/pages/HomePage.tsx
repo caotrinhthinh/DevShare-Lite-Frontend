@@ -5,7 +5,7 @@ import type { Post } from "../types";
 import { Link } from "react-router-dom";
 import PostSkeleton from "../components/Utils/LoadingSkeleton";
 import PostCardCompact from "../components/Posts/PostCardCompact";
-import EmptyState from "../components/Utils/EmptyState";
+import EmptyStateAdvanced from "../components/Utils/EmptyStateAdvanced";
 
 const HomePage = () => {
   const { user } = useAuth();
@@ -223,7 +223,7 @@ const HomePage = () => {
               ))}
             </div>
           ) : (
-            <EmptyState
+            <EmptyStateAdvanced
               searchQuery={searchQuery}
               user={user}
               title={searchQuery ? "No posts found" : "No posts available yet"}

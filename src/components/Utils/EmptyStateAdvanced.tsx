@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import type { User } from "../../types";
 
-const EmptyState = ({
+const EmptyStateAdvanced = ({
   searchQuery,
   user,
   title,
@@ -56,4 +56,4 @@ const EmptyState = ({
   </div>
 );
 
-export default EmptyState;
+export default EmptyStateAdvanced;
