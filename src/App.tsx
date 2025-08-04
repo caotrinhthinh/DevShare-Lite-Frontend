@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
-import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import CreatePostPage from "./pages/CreatePostPage";
@@ -9,6 +8,7 @@ import PostDetailPage from "./pages/PostDetailPage";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import { HomePage } from "./pages/HomePage";
 
 function App() {
   return (

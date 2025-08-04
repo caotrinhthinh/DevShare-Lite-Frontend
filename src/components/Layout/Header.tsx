@@ -26,6 +26,27 @@ const Header = () => {
       ${isActive ? "text-primary-600 after:w-full" : ""}
     `;
 
+  const MobileNavLink = ({
+    to,
+    label,
+    onClick,
+  }: {
+    to: string;
+    label: string;
+    onClick?: () => void;
+  }) => (
+    <NavLink
+      to={to}
+      className={navLinkClass}
+      onClick={() => {
+        setIsMenuOpen(false);
+        onClick?.();
+      }}
+    >
+      {label}
+    </NavLink>
+  );
+
   return (
     <header className="bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -77,6 +98,7 @@ const Header = () => {
           <button
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
           >
             {isMenuOpen ? (
               <XMarkIcon className="h-6 w-6" />
@@ -89,38 +111,12 @@ const Header = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t space-y-2">
-            <NavLink
-              to="/"
-              className={navLinkClass}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Home
-            </NavLink>
-            <NavLink
-              to="/posts"
-              className={navLinkClass}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Posts
-            </NavLink>
-            {user && (
-              <NavLink
-                to="/create-post"
-                className={navLinkClass}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Create Post
-              </NavLink>
-            )}
+            <MobileNavLink to="/" label="Home" />
+            <MobileNavLink to="/posts" label="Posts" />
+            {user && <MobileNavLink to="/create-post" label="Create Post" />}
             {user ? (
               <>
-                <NavLink
-                  to="/profile"
-                  className={navLinkClass}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Profile
-                </NavLink>
+                <MobileNavLink to="/profile" label="Profile" />
                 <button
                   onClick={() => {
                     setIsMenuOpen(false);
