@@ -111,7 +111,7 @@ export const HomePage: React.FC = () => {
 
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(10)].map((_, i) => (
+            {[...Array(6)].map((_, i) => (
               <div
                 key={i}
                 className="bg-white rounded-lg shadow-sm border p-6 animate-pulse"
@@ -127,7 +127,7 @@ export const HomePage: React.FC = () => {
             ))}
           </div>
         ) : posts.length > 0 ? (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {posts.map((post) => (
               <PostCardCompact key={post._id} post={post} />
             ))}

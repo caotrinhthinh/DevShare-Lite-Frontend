@@ -10,6 +10,22 @@ const PostPage = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [total, setTotal] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+
+    setLoading(true);
+    try {
+      const response = await postsService.searchPosts(searchQuery);
+      setPosts(response.posts);
+    } catch (error) {
+      console.error("Error searching posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchPosts = async () => {
     try {
@@ -50,6 +66,24 @@ const PostPage = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-900">All Posts</h1>
         <p className="text-gray-600">{total} posts total</p>
+
+        {/* Search */}
+        <section className="mb-10">
+          <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search posts..."
+                className="input flex-1"
+              />
+              <button type="submit" className="btn btn-primary">
+                Search
+              </button>
+            </div>
+          </form>
+        </section>
       </div>
 
       {posts.length > 0 ? (

@@ -16,11 +16,8 @@ function App() {
       {/* Layout-wrapped routes */}
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
         <Route path="/posts" element={<PostsPage />} />
         <Route path="/posts/:id" element={<PostDetailPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         {/* Protected Routes */}
         <Route
@@ -35,6 +32,9 @@ function App() {
 
       {/* Route outside Layout */}
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
       {/* 404 Redirect */}
       <Route path="*" element={<Navigate to="/" replace />} />
