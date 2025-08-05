@@ -1,42 +1,44 @@
 import React, { useState } from "react";
 import type { Comment, User } from "../../types";
 import CommentForm from "./CommentForm";
+import formDate from "../Utils/FormatDateTime";
 
 interface CommentItemProps {
   comment: Comment;
   currentUser: User | null;
-  onReply: (content: string) => void;
-  onUpdate: (content: string) => void;
-  onDelete: () => void;
+  postId: string;
+  getReplies: (postId: string, commentId: string) => Promise<Comment[]>;
+  onReply: (content: string, parentId?: string) => void;
+  onUpdate: (content: string, commentId: string) => void;
+  onDelete: (commentId: string) => void;
+  onLike: (commentId: string) => Promise<void>;
 }
+
 const CommentItem = ({
   comment,
   currentUser,
+  postId,
+  getReplies,
   onReply,
   onUpdate,
   onDelete,
+  onLike,
 }: CommentItemProps) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showReplyComment, setShowReplyComment] = useState(false);
+  const [replies, setReplies] = useState<Comment[] | null>(null);
+  const [loadingReplies, setLoadingReplies] = useState(false);
+  const [likeCount, setLikeCount] = useState(comment.likeCount);
+  const [isLiked, setIsLiked] = useState(false);
 
   const isAuthor = currentUser && currentUser.id === comment.author._id;
-
-  const formDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
 
   const handleReply = async (content: string) => {
     setIsSubmitting(true);
     try {
-      await onReply(content);
+      await onReply(content, comment._id);
       setShowReplyForm(false);
     } finally {
       setIsSubmitting(false);
@@ -46,11 +48,25 @@ const CommentItem = ({
   const handleUpdate = async (content: string) => {
     setIsSubmitting(true);
     try {
-      await onUpdate(content);
+      await onUpdate(content, comment._id);
       setIsEditing(false);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleDelete = () => {
+    onDelete(comment._id);
+  };
+
+  const handleShowReplies = async () => {
+    if (!replies) {
+      setLoadingReplies(true);
+      const data = await getReplies(postId, comment._id);
+      setReplies(data);
+      setLoadingReplies(false);
+    }
+    setShowReplyComment(true);
   };
 
   return (
@@ -86,12 +102,29 @@ const CommentItem = ({
 
               <div className="flex items-center space-x-4 text-sm">
                 {currentUser && (
-                  <button
-                    onClick={() => setShowReplyForm(!showReplyForm)}
-                    className="text-primary-600 hover:text-primary-500"
-                  >
-                    Reply
-                  </button>
+                  <>
+                    <button
+                      onClick={() => setShowReplyForm(!showReplyForm)}
+                      className="text-primary-600 hover:text-primary-500"
+                    >
+                      Reply
+                    </button>
+
+                    <button
+                      onClick={async () => {
+                        await onLike(comment._id);
+                        setIsLiked(!isLiked);
+                        setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
+                      }}
+                      className={`hover:text-primary-600 ${
+                        isLiked
+                          ? "text-primary-600 font-semibold"
+                          : "text-gray-600"
+                      }`}
+                    >
+                      {isLiked ? "Unlike" : "Like"}
+                    </button>
+                  </>
                 )}
 
                 {isAuthor && (
@@ -103,7 +136,7 @@ const CommentItem = ({
                       Edit
                     </button>
                     <button
-                      onClick={onDelete}
+                      onClick={handleDelete}
                       className="text-red-600 hover:text-red-500"
                     >
                       Delete
@@ -111,14 +144,14 @@ const CommentItem = ({
                   </>
                 )}
 
-                <span className="text-gray-500">{comment.likeCount} likes</span>
+                <span className="text-gray-500">{likeCount} likes</span>
               </div>
             </>
           )}
         </div>
       </div>
 
-      {/** Reply Form */}
+      {/* Reply Form */}
       {showReplyForm && currentUser && (
         <div className="ml-12">
           <CommentForm
@@ -131,34 +164,48 @@ const CommentItem = ({
         </div>
       )}
 
-      {/** Replies */}
-      {!showReplyComment && (
-        <div className="ml-12 space-y-4 border-l-2 pl-4 border-gray-100">
-          {comment.replies &&
-            comment.replies.length > 0 &&
-            (comment.replies.length === 1 ? (
-              <button
-                onClick={() => setShowReplyComment(true)}
-                className="text-base text-gray-600 hover:text-gray-500"
-              >
-                Xem {comment.replies.length} phản hồi
-              </button>
-            ) : (
-              <button>Xem tất cả {comment.replies.length} phản hồi</button>
-            ))}
+      {/* Show replies button */}
+      {!showReplyComment && comment.replies.length > 0 && (
+        <div className="ml-12 border-l-2 pl-4 border-gray-100">
+          <button
+            onClick={handleShowReplies}
+            className="text-base text-gray-600 hover:text-gray-500"
+          >
+            {loadingReplies
+              ? "Đang tải phản hồi..."
+              : `Xem ${comment.replies.length === 1 ? "" : "tất cả "} ${
+                  comment.replies.length
+                } phản hồi`}
+          </button>
         </div>
       )}
 
-      {showReplyComment && comment.replies && comment.replies.length > 0 && (
+      {/* Hide replies button */}
+      {showReplyComment && (
+        <div className="ml-12 border-l-2 pl-4 border-gray-100">
+          <button
+            onClick={() => setShowReplyComment(false)}
+            className="text-base text-gray-600 hover:text-gray-500"
+          >
+            Ẩn phản hồi
+          </button>
+        </div>
+      )}
+
+      {/* Replies section */}
+      {showReplyComment && replies && (
         <div className="ml-12 space-y-4 border-l-2 pl-4 border-gray-100">
-          {comment.replies.map((reply) => (
+          {replies.map((reply) => (
             <CommentItem
               key={reply._id}
               comment={reply}
               currentUser={currentUser}
+              postId={postId}
+              getReplies={getReplies}
               onReply={onReply}
               onUpdate={onUpdate}
               onDelete={onDelete}
+              onLike={onLike}
             />
           ))}
         </div>

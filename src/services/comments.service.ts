@@ -39,4 +39,11 @@ export const commentsService = {
     );
     return response.data;
   },
+
+  getReplies: async (postId: string, commentId: string): Promise<Comment[]> => {
+    const response = await api.get(
+      `/posts/${postId}/comments/${commentId}/replies`
+    );
+    return response.data;
+  },
 };

@@ -67,6 +67,17 @@ const CommentSection = ({
     }
   };
 
+  const handleLikeComment = async (commentId: string) => {
+    try {
+      await commentsService.likeComment(postId, commentId);
+      onCommentUpdated(); // gọi lại để refetch comment mới nếu cần
+    } catch (error) {
+      const message =
+        (error as any)?.response?.data?.message || "Failed to like comment";
+      toast.error(message);
+    }
+  };
+
   const getTotalCommentCount = (comments: Comment[]) => {
     let count = 0;
     const countRecursive = (commentList: Comment[]) => {
@@ -84,7 +95,6 @@ const CommentSection = ({
   return (
     <div>
       <h3>Comments ({getTotalCommentCount(comments)})</h3>
-
       {/** Add Comment Form */}
       {user ? (
         <div>
@@ -102,16 +112,21 @@ const CommentSection = ({
 
       {/** Comments List */}
       <div>
-        {comments.map((comment) => (
-          <CommentItem
-            key={comment._id}
-            comment={comment}
-            currentUser={user}
-            onReply={(content) => handleAddComment(content, comment._id)}
-            onUpdate={(content) => handleUpdateComment(comment._id, content)}
-            onDelete={() => handleDeleteComment(comment._id)}
-          />
-        ))}
+        {comments
+          .filter((comment) => comment && comment._id)
+          .map((comment) => (
+            <CommentItem
+              key={comment._id}
+              postId={postId}
+              comment={comment}
+              currentUser={user}
+              onReply={(content) => handleAddComment(content, comment._id)}
+              onUpdate={(content) => handleUpdateComment(comment._id, content)}
+              onDelete={() => handleDeleteComment(comment._id)}
+              getReplies={commentsService.getReplies}
+              onLike={() => handleLikeComment(comment._id)}
+            />
+          ))}
 
         {comments.length === 0 && (
           <div className="text-center py-8">
