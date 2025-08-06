@@ -12,6 +12,11 @@ export const authService = {
     return response.data;
   },
 
+  logout: async () => {
+    const response = await api.post("/auth/logout");
+    return response.data;
+  },
+
   verifyEmail: async (token: string) => {
     const response = await api.get(`/auth/verify-email?code=${token}`);
     return response.data;
@@ -39,7 +44,7 @@ export const authService = {
   },
 
   getProfile: async () => {
-    const response = await api.get("/auth/profile");
+    const response = await api.get("/users/me");
     return response.data;
   },
 };

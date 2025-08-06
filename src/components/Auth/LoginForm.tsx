@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -17,7 +18,7 @@ const schema = yup.object({
 
 type FormData = yup.InferType<typeof schema>;
 
-const LoginForm = () => {
+const LoginForm = ({ redirectTo }: { redirectTo: string }) => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const {
@@ -35,7 +36,7 @@ const LoginForm = () => {
       toast.success("Login successful!");
       navigate("/");
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Login failed");
+      toast.error(error.message || "Login failed");
     }
   };
 
@@ -52,6 +53,7 @@ const LoginForm = () => {
             type="email"
             {...register("email")}
             className={`input w-full ${errors.email ? "border-red-500" : ""}`}
+            placeholder="Email address"
           />
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -63,6 +65,7 @@ const LoginForm = () => {
             Password
           </label>
           <input
+            placeholder="Password"
             type="password"
             {...register("password")}
             className={`input w-full ${

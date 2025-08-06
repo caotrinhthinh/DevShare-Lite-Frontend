@@ -10,6 +10,7 @@ export interface Comment {
   parentComment?: string;
   replies: Comment[];
   likeCount: number;
+  likedBy: string[];
   createdAt: string;
   updatedAt: string;
 }

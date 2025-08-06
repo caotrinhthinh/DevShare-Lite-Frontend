@@ -10,7 +10,7 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    navigate("/login"); // React Router
   };
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>

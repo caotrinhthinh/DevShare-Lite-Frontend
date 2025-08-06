@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { Comment, User } from "../../types";
 import CommentForm from "./CommentForm";
 import formDate from "../Utils/FormatDateTime";
@@ -31,9 +31,15 @@ const CommentItem = ({
   const [replies, setReplies] = useState<Comment[] | null>(null);
   const [loadingReplies, setLoadingReplies] = useState(false);
   const [likeCount, setLikeCount] = useState(comment.likeCount);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState<boolean | null>(null);
 
   const isAuthor = currentUser && currentUser.id === comment.author._id;
+
+  useEffect(() => {
+    if (currentUser) {
+      setIsLiked(comment.likedBy.includes(currentUser.id));
+    }
+  }, [currentUser, comment.likedBy]);
 
   const handleReply = async (content: string) => {
     setIsSubmitting(true);
@@ -122,7 +128,7 @@ const CommentItem = ({
                           : "text-gray-600"
                       }`}
                     >
-                      {isLiked ? "Unlike" : "Like"}
+                      Like
                     </button>
                   </>
                 )}

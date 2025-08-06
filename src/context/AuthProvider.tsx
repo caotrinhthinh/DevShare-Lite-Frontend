@@ -36,8 +36,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = async (data: LoginData) => {
     try {
       const response = await authService.login(data);
-      localStorage.setItem("token", response.accessToken);
-      setToken(response.accessToken);
+      console.log("response:", response.access_token);
+      localStorage.setItem("token", response.access_token);
+      console.log("Đã lưu");
+      console.log(
+        "Sau khi lưu token vào localStorage:",
+        localStorage.getItem("token")
+      );
+      setToken(response.access_token);
       setUser(response.user);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -59,10 +65,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.setItem("token", response.token);
   };
 
-  const logout = () => {
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem("token");
+  const logout = async () => {
+    await authService.logout();
   };
 
   const value = {
